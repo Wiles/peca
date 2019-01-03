@@ -64,7 +64,7 @@ def iterate_life(cells:List[float], rule):
 def generate_image(matrix, width: int, height: int, size: int):
 	canvas_width = width * size
 	canvas_height = height * size
-	img = Image.new('RGBA', (canvas_width, canvas_height), (255, 0, 0, 0))
+	img = Image.new('RGB', (canvas_width, canvas_height), (255, 0, 0, 0))
 
 	draw = ImageDraw.Draw(img)
 
@@ -80,7 +80,7 @@ def generate_image(matrix, width: int, height: int, size: int):
 
 			draw.rectangle(location, fill=color)
 
-	img.save('test.png', 'PNG')
+	img.save('test.jpg', 'JPEG')
 
 if __name__ == "__main__":
 	cell_size = 20
@@ -91,6 +91,6 @@ if __name__ == "__main__":
 	print(first_gen)
 	matrix.append(first_gen)
 	for x in range(0, iterations):
-		matrix.append(iterate_life(matrix[-1], rule_45))
+		matrix.append(iterate_life(matrix[-1], rule_60))
 
 	generate_image(matrix, len(first_gen), len(matrix), cell_size)
