@@ -2,44 +2,27 @@ from PIL import Image, ImageDraw
 from typing import List
 import random
 
+def generate_rule(n):
+	def rule(a, b, c):
+		print(n)
+		if [a, b, c] == [1, 1, 1]:
+			return n >> 7 & 1
+		if [a, b, c] == [1, 1, 0]:
+			return n >> 6 & 1
+		if [a, b, c] == [1, 0, 1]:
+			return n >> 5 & 1
+		if [a, b, c] == [1, 0, 0]:
+			return n >> 4 & 1
+		if [a, b, c] == [0, 1, 1]:
+			return n >> 3 & 1
+		if [a, b, c] == [0, 1, 0]:
+			return n >> 2 & 1
+		if [a, b, c] == [0, 0, 1]:
+			return n >> 1 & 1
+		if [a, b, c] == [0, 0, 0]:
+			return n & 1
 
-def rule_60(a, b, c):
-	if [a, b, c] == [1, 1, 1]:
-		return 0
-	if [a, b, c] == [1, 1, 0]:
-		return 0
-	if [a, b, c] == [1, 0, 1]:
-		return 1
-	if [a, b, c] == [1, 0, 0]:
-		return 1
-	if [a, b, c] == [0, 1, 1]:
-		return 1
-	if [a, b, c] == [0, 1, 0]:
-		return 1
-	if [a, b, c] == [0, 0, 1]:
-		return 0
-	if [a, b, c] == [0, 0, 0]:
-		return 0
-
-
-def rule_45(a, b, c):
-	if [a, b, c] == [1, 1, 1]:
-		return 0
-	if [a, b, c] == [1, 1, 0]:
-		return 0
-	if [a, b, c] == [1, 0, 1]:
-		return 1
-	if [a, b, c] == [1, 0, 0]:
-		return 0
-	if [a, b, c] == [0, 1, 1]:
-		return 1
-	if [a, b, c] == [0, 1, 0]:
-		return 1
-	if [a, b, c] == [0, 0, 1]:
-		return 0
-	if [a, b, c] == [0, 0, 0]:
-		return 1
-
+	return rule
 
 def initiate_life(cell_count: int):
 	row = []
@@ -83,7 +66,7 @@ def generate_image(matrix, width: int, height: int, size: int):
 	img.save('test.jpg', 'JPEG')
 
 if __name__ == "__main__":
-	cell_size = 20
+	cell_size = 29
 	cell_count = int(2900 / cell_size)
 	iterations = int(4060 / cell_size) - 1
 	matrix = []
@@ -91,6 +74,6 @@ if __name__ == "__main__":
 	print(first_gen)
 	matrix.append(first_gen)
 	for x in range(0, iterations):
-		matrix.append(iterate_life(matrix[-1], rule_60))
+		matrix.append(iterate_life(matrix[-1], generate_rule(60)))
 
 	generate_image(matrix, len(first_gen), len(matrix), cell_size)
