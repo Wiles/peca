@@ -37,7 +37,7 @@ def iterate_life(cells:List[float], rule):
 		a = cells[x-1]
 		b = cells[x]
 		if (x + 1 == len(cells)):
-			c = cells[-1]
+			c = cells[0]
 		else:
 			c = cells[x + 1]
 		next_gen.append(rule(a, b, c))
