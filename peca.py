@@ -5,7 +5,6 @@ import argparse
 
 def generate_rule(n):
     def rule(a, b, c):
-        print(n)
         if [a, b, c] == [1, 1, 1]:
             return n >> 7 & 1
         if [a, b, c] == [1, 1, 0]:
@@ -75,15 +74,21 @@ def elementary_cellular_automaton(width: int, height: int, rule: callable):
 
     return matrix
 
-if __name__ == "__main__":
+
+def handle_args():
     parser = argparse.ArgumentParser()
+
     parser.add_argument("--width", "-w", help="set output width", type=int)
     parser.add_argument("--length", "-l", help="set output height", type=int)
     parser.add_argument("--cell-size", "-c", help="set cell size", type=int)
     parser.add_argument("--rule", "-r", help="rule number for eca", type=int, default=110)
     parser.add_argument("--algorithm", "-a", help="algorithm for image generatrion", type=str, default="eca")
     parser.add_argument("--output", "-o", help="output filename", type=str, default="out.png")
-    args = parser.parse_args()
+    return parser.parse_args()
+
+if __name__ == "__main__":
+    args = handle_args()
+
     cell_size = args.cell_size
     width = args.width
     height = args.length
