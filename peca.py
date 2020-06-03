@@ -3,6 +3,7 @@ from typing import List
 import random
 import argparse
 
+
 def generate_rule(n):
     def rule(a, b, c):
         if [a, b, c] == [1, 1, 1]:
@@ -23,6 +24,7 @@ def generate_rule(n):
             return n & 1
 
     return rule
+
 
 def initiate_life(cell_count: int):
     row = []
@@ -65,6 +67,7 @@ def generate_image(matrix, width: int, height: int, size: int, filename: str):
 
     img.save(filename, 'png')
 
+
 def elementary_cellular_automaton(width: int, height: int, rule: callable):
     matrix = []
     first_gen = initiate_life(width)
@@ -78,13 +81,14 @@ def elementary_cellular_automaton(width: int, height: int, rule: callable):
 def handle_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--width", "-w", help="set output width", type=int)
-    parser.add_argument("--length", "-l", help="set output height", type=int)
-    parser.add_argument("--cell-size", "-c", help="set cell size", type=int)
+    parser.add_argument("--width", "-w", help="set output width", type=int, required=True)
+    parser.add_argument("--length", "-l", help="set output height", type=int, required=True)
+    parser.add_argument("--cell-size", "-c", help="set cell size", type=int, required=True)
     parser.add_argument("--rule", "-r", help="rule number for eca", type=int, default=110)
     parser.add_argument("--algorithm", "-a", help="algorithm for image generatrion", type=str, default="eca")
     parser.add_argument("--output", "-o", help="output filename", type=str, default="out.png")
     return parser.parse_args()
+
 
 if __name__ == "__main__":
     args = handle_args()
