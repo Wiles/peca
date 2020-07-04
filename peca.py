@@ -109,8 +109,6 @@ if __name__ == "__main__":
     transparent = args.transparent
     filename = args.output
 
-    print(transparent)
-
     matrix = None
 
     if algo == "eca":
