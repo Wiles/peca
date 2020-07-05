@@ -3,6 +3,9 @@ from typing import List
 import random
 import argparse
 
+black = (0x00, 0x00, 0x00, 0xff)
+white = (0xff, 0x00, 0xff, 0xff)
+transparent = (0xff, 0xff, 0xff, 0x00)
 
 def generate_rule(n):
     def rule(a, b, c):
@@ -46,15 +49,15 @@ def iterate_life(cells: List[float], rule):
     return next_gen
 
 
-def generate_image(matrix, width: int, height: int, size: int, transparent: bool, filename: str):
+def generate_image(matrix, width: int, height: int, size: int, is_transparent: bool, filename: str):
     canvas_width = width * size
     canvas_height = height * size
 
-    background = (0xff, 0xff, 0xff, 0xff)
-    foreground = (0x00, 0x00, 0x00, 0xff)
+    foreground = black
+    background = white
 
-    if transparent:
-        background = (0xff, 0x00, 0xff, 0x00)
+    if is_transparent:
+        background = transparent
 
     img = Image.new('RGBA', (canvas_width, canvas_height), background)
 
@@ -63,13 +66,12 @@ def generate_image(matrix, width: int, height: int, size: int, transparent: bool
     for x in range(0, width):
         for y in range(0, height):
             if matrix[y][x] == 1:
-                color = foreground
 
                 pos_x = x * size
                 pos_y = y * size
                 location = (pos_x, pos_y, pos_x + size, pos_y + size)
 
-                draw.rectangle(location, fill=color)
+                draw.rectangle(location, fill=foreground)
 
     img.save(filename, 'png')
 
