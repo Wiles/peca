@@ -5,7 +5,7 @@ import argparse
 
 black = (0x00, 0x00, 0x00, 0xff)
 white = (0xff, 0x00, 0xff, 0xff)
-transparent = (0xff, 0xff, 0xff, 0x00)
+transparent = (0xff, 0xff, 0xff, 0xff)
 
 def generate_rule(n):
     def rule(a, b, c):
@@ -69,7 +69,7 @@ def generate_image(matrix, width: int, height: int, size: int, is_transparent: b
 
                 pos_x = x * size
                 pos_y = y * size
-                location = (pos_x, pos_y, pos_x + size, pos_y + size)
+                location = (pos_x, pos_y, pos_x + size - 1, pos_y + size - 1)
 
                 draw.rectangle(location, fill=foreground)
 
