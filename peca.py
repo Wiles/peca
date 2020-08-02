@@ -36,7 +36,7 @@ def generate_rule(n):
 
 def generate_seed(cell_count: int):
     seed = ""
-    for x in range(0, ceil(cell_count / 4)):
+    while len(seed) < ceil(cell_count / 4):
         seed += random.choice("0123456789ABCDEF")
 
     return seed
@@ -120,7 +120,7 @@ def elementary_cellular_automaton(width: int, height: int, rule: callable, seed:
     matrix = []
     first_gen = initiate_life(width, seed)
     matrix.append(first_gen)
-    for x in range(0, height - 1):
+    while len(matrix) < height:
         next_gen = iterate_life(matrix[-1], rule)
         matrix.append(next_gen)
 
