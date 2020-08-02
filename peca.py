@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 from typing import List
-from math import ceil, floor
+from math import ceil
 from os import linesep
 import random
 import argparse
@@ -97,12 +97,12 @@ def generate_image(matrix, size: int, is_transparent: bool):
 
 def generate_unicode(matrix):
     output = ""
-    for x in range(0, floor(len(matrix) / 2)):
+    for x in range(0, ceil(len(matrix) / 2)):
         top = matrix[x * 2]
-        bottom = matrix[(x * 2) + 1]
-
-        if not bottom:
+        if ((x * 2) + 1) >= len(matrix):
             bottom = "".rjust(len(top), "0")
+        else:
+            bottom = matrix[((x * 2) + 1)]
 
         line = ""
         for a, b in zip(top, bottom):
