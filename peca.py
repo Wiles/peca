@@ -43,15 +43,20 @@ def generate_seed(cell_count: int):
 
 
 def initiate_life(cell_count: int, seed: str):
-    row = bin(int(seed, 16))[2:].zfill(len(seed) * 4)
 
-    row = row[:cell_count]
+    # Convert hex string to binary
+    bin_seed = bin(int(seed, 16))[2:].zfill(len(seed) * 4)
 
-    row = row.ljust(cell_count, "0")
-    return row
+    # truncate long seeds
+    bin_seed = bin_seed[:cell_count]
+
+    # pad short seeds
+    bin_seed = bin_seed.ljust(cell_count, "0")
+    
+    return bin_seed
 
 
-def iterate_life(cells: List[float], rule):
+def iterate_life(cells: str, rule):
     next_gen = ""
     for x in range(0, len(cells)):
         a = cells[x-1]

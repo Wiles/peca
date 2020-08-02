@@ -1,5 +1,5 @@
 import unittest
-from peca import generate_unicode, generate_seed, initiate_life, generate_rule
+from peca import generate_unicode, generate_seed, initiate_life, generate_rule, iterate_life, elementary_cellular_automaton
 from os import linesep
 
 
@@ -72,28 +72,58 @@ class Tests(unittest.TestCase):
 
         rule = generate_rule(90)
 
-        self.assertEqual(rule("0","0","0",), "0")
-        self.assertEqual(rule("0","0","1",), "1")
-        self.assertEqual(rule("0","1","0",), "0")
-        self.assertEqual(rule("0","1","1",), "1")
-        self.assertEqual(rule("1","0","0",), "1")
-        self.assertEqual(rule("1","0","1",), "0")
-        self.assertEqual(rule("1","1","0",), "1")
-        self.assertEqual(rule("1","1","1",), "0")
+        self.assertEqual(rule("0", "0", "0",), "0")
+        self.assertEqual(rule("0", "0", "1",), "1")
+        self.assertEqual(rule("0", "1", "0",), "0")
+        self.assertEqual(rule("0", "1", "1",), "1")
+        self.assertEqual(rule("1", "0", "0",), "1")
+        self.assertEqual(rule("1", "0", "1",), "0")
+        self.assertEqual(rule("1", "1", "0",), "1")
+        self.assertEqual(rule("1", "1", "1",), "0")
 
     def test_generate_rule_110(self):
 
         rule = generate_rule(110)
 
-        self.assertEqual(rule("0","0","0",), "0")
-        self.assertEqual(rule("0","0","1",), "1")
-        self.assertEqual(rule("0","1","0",), "1")
-        self.assertEqual(rule("0","1","1",), "1")
-        self.assertEqual(rule("1","0","0",), "0")
-        self.assertEqual(rule("1","0","1",), "1")
-        self.assertEqual(rule("1","1","0",), "1")
-        self.assertEqual(rule("1","1","1",), "0")
+        self.assertEqual(rule("0", "0", "0",), "0")
+        self.assertEqual(rule("0", "0", "1",), "1")
+        self.assertEqual(rule("0", "1", "0",), "1")
+        self.assertEqual(rule("0", "1", "1",), "1")
+        self.assertEqual(rule("1", "0", "0",), "0")
+        self.assertEqual(rule("1", "0", "1",), "1")
+        self.assertEqual(rule("1", "1", "0",), "1")
+        self.assertEqual(rule("1", "1", "1",), "0")
 
+    def test_iterate_life(self):
+        rule = generate_rule(90)
+
+        expected = "01000001"
+
+        input = "00101010"
+
+        actual = iterate_life(input, rule)
+
+        self.assertEqual(expected, actual)
+
+    def test_eca_sierpinski(self):
+        rule = generate_rule(90)
+
+        input = "01"
+
+        actual = elementary_cellular_automaton(15, 8, rule, input)
+
+        expected = [
+            "000000010000000",
+            "000000101000000",
+            "000001000100000",
+            "000010101010000",
+            "000100000001000",
+            "001010000010100",
+            "010001000100010",
+            "101010101010101",
+        ]
+
+        self.assertEqual(expected, actual)
 
 
 if __name__ == "__main__":
