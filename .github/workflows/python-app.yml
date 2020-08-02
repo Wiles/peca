@@ -34,3 +34,12 @@ jobs:
     - name: Test with pytest
       run: |
         coverage run --include=peca.py -m unittest test
+        coverage xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
+        flags: unittests
+        env_vars: OS,PYTHON
+        fail_ci_if_error: true
