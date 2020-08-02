@@ -95,26 +95,23 @@ def generate_image(matrix, size: int, is_transparent: bool):
 
 
 def generate_unicode(matrix):
+    
     lines = []
-    for x in range(0, ceil(len(matrix) / 2)):
-        top = matrix[x * 2]
-        if ((x * 2) + 1) >= len(matrix):
+    
+    count = len(matrix)
+
+    if count % 2 == 1:
+        count += 1
+
+    for x in range(0, count, 2):
+        top = matrix[x]
+        if (x + 1) >= len(matrix):
             bottom = "".rjust(len(top), "0")
         else:
-            bottom = matrix[((x * 2) + 1)]
+            bottom = matrix[x + 1]
 
-        line = ""
-        for a, b in zip(top, bottom):
-            if a == "1" and b == "1":
-                line += "█"
-            elif a == "1" and b == "0":
-                line += "▀"
-            elif a == "0" and b == "1":
-                line += "▄"
-            else:
-                line += " "
-
-        lines.append(line)
+        line = "".join([" ▄▀█"[int(a + b, 2)] for a, b in zip(top, bottom)])
+        lines.append("".join(line))
 
     return linesep.join(lines)
 

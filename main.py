@@ -10,7 +10,7 @@ def handle_args():
     parser.add_argument(
         "--length", "-l", help="set output height", type=int, required=True)
     parser.add_argument("--cell-size", "-c",
-                        help="set cell size", type=int, required=True)
+                        help="set cell size", type=int, default=1)
     parser.add_argument(
         "--rule", "-r", help="rule number for eca", type=int, default=110)
     parser.add_argument(
