@@ -1,5 +1,5 @@
 import unittest
-from peca import generate_unicode, generate_seed, initiate_life
+from peca import generate_unicode, generate_seed, initiate_life, generate_rule
 from os import linesep
 
 
@@ -67,6 +67,33 @@ class Tests(unittest.TestCase):
         actual = initiate_life(len(seed) * 4 + 2, seed)
 
         self.assertEqual(expected, actual)
+
+    def test_generate_rule_90(self):
+
+        rule = generate_rule(90)
+
+        self.assertEqual(rule("0","0","0",), "0")
+        self.assertEqual(rule("0","0","1",), "1")
+        self.assertEqual(rule("0","1","0",), "0")
+        self.assertEqual(rule("0","1","1",), "1")
+        self.assertEqual(rule("1","0","0",), "1")
+        self.assertEqual(rule("1","0","1",), "0")
+        self.assertEqual(rule("1","1","0",), "1")
+        self.assertEqual(rule("1","1","1",), "0")
+
+    def test_generate_rule_110(self):
+
+        rule = generate_rule(110)
+
+        self.assertEqual(rule("0","0","0",), "0")
+        self.assertEqual(rule("0","0","1",), "1")
+        self.assertEqual(rule("0","1","0",), "1")
+        self.assertEqual(rule("0","1","1",), "1")
+        self.assertEqual(rule("1","0","0",), "0")
+        self.assertEqual(rule("1","0","1",), "1")
+        self.assertEqual(rule("1","1","0",), "1")
+        self.assertEqual(rule("1","1","1",), "0")
+
 
 
 if __name__ == "__main__":

@@ -9,8 +9,8 @@ white = (0xff, 0xff, 0xff, 0xff)
 transparent = (0xff, 0xff, 0xff, 0x00)
 
 
-def generate_rule(n):
-    def rule(a, b, c):
+def generate_rule(n: int):
+    def rule(a: str, b: str, c: str):
         next = None
         if [a, b, c] == ["1", "1", "1"]:
             next = n >> 7 & 1
