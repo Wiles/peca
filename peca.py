@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw
 from typing import List
+from math import ceil
 import random
 import argparse
 
@@ -7,37 +8,50 @@ black = (0x00, 0x00, 0x00, 0xff)
 white = (0xff, 0xff, 0xff, 0xff)
 transparent = (0xff, 0xff, 0xff, 0x00)
 
+
 def generate_rule(n):
     def rule(a, b, c):
-        if [a, b, c] == [1, 1, 1]:
-            return n >> 7 & 1
-        if [a, b, c] == [1, 1, 0]:
-            return n >> 6 & 1
-        if [a, b, c] == [1, 0, 1]:
-            return n >> 5 & 1
-        if [a, b, c] == [1, 0, 0]:
-            return n >> 4 & 1
-        if [a, b, c] == [0, 1, 1]:
-            return n >> 3 & 1
-        if [a, b, c] == [0, 1, 0]:
-            return n >> 2 & 1
-        if [a, b, c] == [0, 0, 1]:
-            return n >> 1 & 1
-        if [a, b, c] == [0, 0, 0]:
-            return n & 1
+        next = None
+        if [a, b, c] == ["1", "1", "1"]:
+            next = n >> 7 & 1
+        if [a, b, c] == ["1", "1", "0"]:
+            next = n >> 6 & 1
+        if [a, b, c] == ["1", "0", "1"]:
+            next = n >> 5 & 1
+        if [a, b, c] == ["1", "0", "0"]:
+            next = n >> 4 & 1
+        if [a, b, c] == ["0", "1", "1"]:
+            next = n >> 3 & 1
+        if [a, b, c] == ["0", "1", "0"]:
+            next = n >> 2 & 1
+        if [a, b, c] == ["0", "0", "1"]:
+            next = n >> 1 & 1
+        if [a, b, c] == ["0", "0", "0"]:
+            next = n & 1
+
+        return str(next)
 
     return rule
 
+def generate_seed(cell_count: int):
+    seed = ""
+    for x in range(0, ceil(cell_count / 4)):
+        seed += random.choice("0123456789ABCDEF")
 
-def initiate_life(cell_count: int):
-    row = []
-    for x in range(0, cell_count):
-        row.append(random.choice([1, 0]))
+    return seed
+
+
+def initiate_life(cell_count: int, seed: str):
+    row = bin(int(seed, 16))[2:].zfill(len(seed) * 4)
+
+    row = row[:cell_count]
+
+    row = row.ljust(cell_count, "0")
     return row
 
 
 def iterate_life(cells: List[float], rule):
-    next_gen = []
+    next_gen = ""
     for x in range(0, len(cells)):
         a = cells[x-1]
         b = cells[x]
@@ -45,7 +59,7 @@ def iterate_life(cells: List[float], rule):
             c = cells[0]
         else:
             c = cells[x + 1]
-        next_gen.append(rule(a, b, c))
+        next_gen += rule(a, b, c)
     return next_gen
 
 
@@ -65,7 +79,7 @@ def generate_image(matrix, width: int, height: int, size: int, is_transparent: b
 
     for x in range(0, width):
         for y in range(0, height):
-            if matrix[y][x] == 1:
+            if matrix[y][x] == "1":
 
                 pos_x = x * size
                 pos_y = y * size
@@ -73,15 +87,16 @@ def generate_image(matrix, width: int, height: int, size: int, is_transparent: b
 
                 draw.rectangle(location, fill=foreground)
 
-    img.save(filename, 'png')
+    return img
 
 
-def elementary_cellular_automaton(width: int, height: int, rule: callable):
+def elementary_cellular_automaton(width: int, height: int, rule: callable, seed: str):
     matrix = []
-    first_gen = initiate_life(width)
+    first_gen = initiate_life(width, seed)
     matrix.append(first_gen)
     for x in range(0, height - 1):
-        matrix.append(iterate_life(matrix[-1], rule))
+        next_gen = iterate_life(matrix[-1], rule)
+        matrix.append(next_gen)
 
     return matrix
 
@@ -89,13 +104,22 @@ def elementary_cellular_automaton(width: int, height: int, rule: callable):
 def handle_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--width", "-w", help="set output width", type=int, required=True)
-    parser.add_argument("--length", "-l", help="set output height", type=int, required=True)
-    parser.add_argument("--cell-size", "-c", help="set cell size", type=int, required=True)
-    parser.add_argument("--rule", "-r", help="rule number for eca", type=int, default=110)
-    parser.add_argument("--algorithm", "-a", help="algorithm for image generation", type=str, default="eca")
-    parser.add_argument("--output", "-o", help="output filename", type=str, default="out.png")
-    parser.add_argument("--transparent", "-t", help="output transparent background", action="store_true")
+    parser.add_argument(
+        "--width", "-w", help="set output width", type=int, required=True)
+    parser.add_argument(
+        "--length", "-l", help="set output height", type=int, required=True)
+    parser.add_argument("--cell-size", "-c",
+                        help="set cell size", type=int, required=True)
+    parser.add_argument(
+        "--rule", "-r", help="rule number for eca", type=int, default=110)
+    parser.add_argument(
+        "--algorithm", "-a", help="algorithm for image generation", type=str, default="eca")
+    parser.add_argument(
+        "--output", "-o", help="output filename", type=str, default="out.png")
+    parser.add_argument("--transparent", "-t",
+                        help="output transparent background", action="store_true")
+    parser.add_argument(
+        "--seed", "-s", help="hexadecimal seed used to initiate life instead of randomness", type=str)
 
     return parser.parse_args()
 
@@ -110,12 +134,19 @@ if __name__ == "__main__":
     algo = args.algorithm
     transparent = args.transparent
     filename = args.output
+    seed = args.seed
 
     matrix = None
 
+    if not seed:
+        seed = generate_seed(width)
+
+        print("Seed:", seed)
+
     if algo == "eca":
-        matrix = elementary_cellular_automaton(width, height, rule)
+        matrix = elementary_cellular_automaton(width, height, rule, seed)
     else:
         raise Exception("unknown algorithm")
 
-    generate_image(matrix, width, height, cell_size, transparent, filename)
+    image = generate_image(matrix, width, height, cell_size, transparent, filename)
+    image.save(filename, 'png')
