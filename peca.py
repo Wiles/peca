@@ -96,7 +96,7 @@ def generate_image(matrix, size: int, is_transparent: bool):
 
 
 def generate_unicode(matrix):
-    output = ""
+    lines = []
     for x in range(0, ceil(len(matrix) / 2)):
         top = matrix[x * 2]
         if ((x * 2) + 1) >= len(matrix):
@@ -115,9 +115,9 @@ def generate_unicode(matrix):
             else:
                 line += " "
 
-        output += line + linesep
+        lines.append(line)
 
-    return output
+    return linesep.join(lines)
 
 
 def elementary_cellular_automaton(width: int, height: int, rule: callable, seed: str):
