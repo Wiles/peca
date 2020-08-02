@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw
 from typing import List
-from math import ceil
+from math import ceil, floor
+from os import linesep
 import random
 import argparse
 
@@ -33,6 +34,7 @@ def generate_rule(n):
 
     return rule
 
+
 def generate_seed(cell_count: int):
     seed = ""
     for x in range(0, ceil(cell_count / 4)):
@@ -63,7 +65,10 @@ def iterate_life(cells: List[float], rule):
     return next_gen
 
 
-def generate_image(matrix, width: int, height: int, size: int, is_transparent: bool, filename: str):
+def generate_image(matrix, size: int, is_transparent: bool):
+
+    width = len(matrix[0])
+    height = len(matrix)
     canvas_width = width * size
     canvas_height = height * size
 
@@ -88,6 +93,31 @@ def generate_image(matrix, width: int, height: int, size: int, is_transparent: b
                 draw.rectangle(location, fill=foreground)
 
     return img
+
+
+def generate_unicode(matrix):
+    output = ""
+    for x in range(0, floor(len(matrix) / 2)):
+        top = matrix[x * 2]
+        bottom = matrix[(x * 2) + 1]
+
+        if not bottom:
+            bottom = "".rjust(len(top), "0")
+
+        line = ""
+        for a, b in zip(top, bottom):
+            if a == "1" and b == "1":
+                line += "█"
+            elif a == "1" and b == "0":
+                line += "▀"
+            elif a == "0" and b == "1":
+                line += "▄"
+            else:
+                line += " "
+
+        output += line + linesep
+
+    return output
 
 
 def elementary_cellular_automaton(width: int, height: int, rule: callable, seed: str):
@@ -115,7 +145,7 @@ def handle_args():
     parser.add_argument(
         "--algorithm", "-a", help="algorithm for image generation", type=str, default="eca")
     parser.add_argument(
-        "--output", "-o", help="output filename", type=str, default="out.png")
+        "--output", "-o", help="output filename", type=str)
     parser.add_argument("--transparent", "-t",
                         help="output transparent background", action="store_true")
     parser.add_argument(
@@ -132,7 +162,7 @@ if __name__ == "__main__":
     height = args.length
     rule = generate_rule(args.rule)
     algo = args.algorithm
-    transparent = args.transparent
+    is_transparent = args.transparent
     filename = args.output
     seed = args.seed
 
@@ -148,5 +178,9 @@ if __name__ == "__main__":
     else:
         raise Exception("unknown algorithm")
 
-    image = generate_image(matrix, width, height, cell_size, transparent, filename)
-    image.save(filename, 'png')
+    if filename:
+        image = generate_image(matrix, cell_size, is_transparent)
+        image.save(filename, 'png')
+    else:
+        unicode = generate_unicode(matrix)
+        print(unicode)
