@@ -136,9 +136,7 @@ class Tests(unittest.TestCase):
 
         byte_io = BytesIO()
 
-        image = generate_image(matrix, 1, False)
-        image.save(byte_io, "png")
-        image.save("out.png", "png")
+        generate_image(matrix, 1, False).save(byte_io, "png")
         with open("test_images/rule_90.png", "rb") as test_file:
             expected = test_file.read()
             self.assertEqual(expected, byte_io.getvalue())
@@ -153,9 +151,7 @@ class Tests(unittest.TestCase):
 
         byte_io = BytesIO()
 
-        image = generate_image(matrix, 2, False)
-        image.save(byte_io, "png")
-        image.save("out.png", "png")
+        generate_image(matrix, 2, False).save(byte_io, "png")
         with open("test_images/rule_90x2.png", "rb") as test_file:
             expected = test_file.read()
             self.assertEqual(expected, byte_io.getvalue())
@@ -170,9 +166,7 @@ class Tests(unittest.TestCase):
 
         byte_io = BytesIO()
 
-        image = generate_image(matrix, 1, True)
-        image.save(byte_io, "png")
-        image.save("out.png", "png")
+        generate_image(matrix, 1, True).save(byte_io, "png")
         with open("test_images/rule_90_transparent.png", "rb") as test_file:
             expected = test_file.read()
             self.assertEqual(expected, byte_io.getvalue())
