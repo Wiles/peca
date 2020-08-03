@@ -1,6 +1,7 @@
 import unittest
-from peca import generate_unicode, generate_seed, initiate_life, generate_rule, iterate_life, elementary_cellular_automaton
+from peca import generate_unicode, generate_seed, initiate_life, generate_rule, iterate_life, elementary_cellular_automaton, generate_image
 from os import linesep
+from io import BytesIO
 
 
 class Tests(unittest.TestCase):
@@ -124,6 +125,57 @@ class Tests(unittest.TestCase):
         ]
 
         self.assertEqual(expected, actual)
+
+    def test_image_sierpinski(self):
+
+        rule = generate_rule(90)
+
+        input = "00000001"
+
+        matrix = elementary_cellular_automaton(63, 32, rule, input)
+
+        byte_io = BytesIO()
+
+        image = generate_image(matrix, 1, False)
+        image.save(byte_io, "png")
+        image.save("out.png", "png")
+        with open("test_images/rule_90.png", "rb") as test_file:
+            expected = test_file.read()
+            self.assertEqual(expected, byte_io.getvalue())
+
+    def test_image_sierpinski_enlarged(self):
+
+        rule = generate_rule(90)
+
+        input = "00000001"
+
+        matrix = elementary_cellular_automaton(63, 32, rule, input)
+
+        byte_io = BytesIO()
+
+        image = generate_image(matrix, 2, False)
+        image.save(byte_io, "png")
+        image.save("out.png", "png")
+        with open("test_images/rule_90x2.png", "rb") as test_file:
+            expected = test_file.read()
+            self.assertEqual(expected, byte_io.getvalue())
+
+    def test_image_sierpinski_transparent(self):
+
+        rule = generate_rule(90)
+
+        input = "00000001"
+
+        matrix = elementary_cellular_automaton(63, 32, rule, input)
+
+        byte_io = BytesIO()
+
+        image = generate_image(matrix, 1, True)
+        image.save(byte_io, "png")
+        image.save("out.png", "png")
+        with open("test_images/rule_90_transparent.png", "rb") as test_file:
+            expected = test_file.read()
+            self.assertEqual(expected, byte_io.getvalue())
 
 
 if __name__ == "__main__":
