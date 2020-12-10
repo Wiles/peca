@@ -52,7 +52,7 @@ def initiate_life(cell_count: int, seed: str):
 
     # pad short seeds
     bin_seed = bin_seed.ljust(cell_count, "0")
-    
+
     return bin_seed
 
 
@@ -100,9 +100,9 @@ def generate_image(matrix, size: int, is_transparent: bool):
 
 
 def generate_unicode(matrix):
-    
+
     lines = []
-    
+
     count = len(matrix)
 
     if count % 2 == 1:
